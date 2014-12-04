@@ -1,7 +1,7 @@
 package org.songli.muledeployservice;
 
 /**
- * Hello world!
+ * Entry of this service
  *
  */
 public class App {
