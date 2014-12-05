@@ -4,7 +4,6 @@ import java.util.Properties;
 
 public class MuleUtil {
    private volatile static MuleUtil muleUtil;
-   private static boolean isInit = false;
    private static String[] startCMD = null;
    private static String[] restartCMD;
    private static String[] stopCMD;
@@ -18,10 +17,7 @@ public class MuleUtil {
          synchronized (MuleUtil.class) {
             if (muleUtil == null) {
                muleUtil = new MuleUtil();
-               if (isInit == false) {
-                  initMuleUtil();
-                  isInit = true;
-               }
+               initMuleUtil();
             }
          }
       }
@@ -30,10 +26,11 @@ public class MuleUtil {
 
    private static void initMuleUtil() {
       String currentOS = System.getProperty("os.name");
-      ResourceFileReader reader = new ResourceFileReader();
+      ResourceFileReader reader = ResourceFileReader.getReader();
       ClassLoader loader = MuleUtil.class.getClassLoader();
 
-      Properties properties = reader.getPropertiesFromFile(loader.getResource("config.properties").toString());
+      Properties properties = reader.getPropertiesFromFile(loader.getResource("config.properties")
+            .toString());
 
       String mulePath = properties.getProperty("mule_path");
 
@@ -41,27 +38,22 @@ public class MuleUtil {
          startCMD = new String[] { "/bin/bash", "-c", mulePath + "/bin/mule" };
          stopCMD = new String[] { "/bin/bash", "-c", mulePath + "/bin/mule stop" };
          restartCMD = new String[] { "/bin/bash", "-c", mulePath + "/bin/mule restart" };
-      }
-      else {
+      } else {
          startCMD = new String[] { "cmd /c " + mulePath + "/bin/launcher.bat" };
          stopCMD = new String[] { "cmd /c " + mulePath + "/bin/launcher.bat" };
          restartCMD = new String[] { "cmd /c " + mulePath + "/bin/launcher.bat" };
       }
    }
 
-   public static boolean isInit() {
-      return isInit;
-   }
-
-   public static String[] getStartCMD() {
+   public String[] getStartCMD() {
       return startCMD;
    }
 
-   public static String[] getRestartCMD() {
+   public String[] getRestartCMD() {
       return restartCMD;
    }
 
-   public static String[] getStopCMD() {
+   public String[] getStopCMD() {
       return stopCMD;
    }
 

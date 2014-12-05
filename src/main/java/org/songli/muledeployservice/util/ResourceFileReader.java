@@ -4,13 +4,18 @@ import java.io.FileInputStream;
 import java.util.Properties;
 
 public class ResourceFileReader {
+   private static ResourceFileReader reader = new ResourceFileReader();
    private Properties properties;
    private FileInputStream inputStream;
 
-   public ResourceFileReader() {
-      properties = new Properties();
+   private ResourceFileReader() {
+
    }
 
+   public static ResourceFileReader getReader() {
+      return reader;
+   }
+   
    public Properties getPropertiesFromFile(String filePath) {
       try {
          inputStream = new FileInputStream(filePath);
@@ -22,5 +27,4 @@ public class ResourceFileReader {
       }
       return properties;
    }
-
 }

@@ -1,7 +1,7 @@
 package org.songli.muledeployservice.context;
 
 public class MuleContext {
-   enum Status {
+   public enum Status {
       RUNNING, STOP, STARTING, ERROR
    }
 
