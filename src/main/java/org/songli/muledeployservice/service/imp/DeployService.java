@@ -7,6 +7,7 @@ import java.rmi.server.UnicastRemoteObject;
 
 import org.songli.muledeployservice.context.MuleContext;
 import org.songli.muledeployservice.service.DeployServiceInterface;
+import org.songli.muledeployservice.util.FileTransferUtil;
 import org.songli.muledeployservice.util.MuleUtil;
 
 public class DeployService extends UnicastRemoteObject implements DeployServiceInterface {
@@ -23,8 +24,18 @@ public class DeployService extends UnicastRemoteObject implements DeployServiceI
    }
 
    @Override
-   public boolean deploy() {
-      return false;
+   public void deploy(String packageName) {
+      String fileLocation = null;
+      FileTransferUtil fileTransferUtil = new FileTransferUtil(packageName);
+      Thread fileTransferThread = new Thread(fileTransferUtil);
+      try {
+         fileTransferThread.start();
+         fileTransferThread.join();
+         fileLocation = fileTransferUtil.getFileLocation();
+         
+      } catch (InterruptedException e) {
+         e.printStackTrace();
+      }
    }
 
    @Override

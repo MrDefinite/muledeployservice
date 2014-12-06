@@ -1,13 +1,17 @@
 package org.songli.muledeployservice.util;
 
+import java.io.File;
 import java.util.Properties;
+
+import org.apache.commons.io.FileUtils;
 
 public class MuleUtil {
    private volatile static MuleUtil muleUtil;
    private static String[] startCMD = null;
    private static String[] restartCMD;
    private static String[] stopCMD;
-
+   private static String mulePath;
+   
    private MuleUtil() {
 
    }
@@ -32,7 +36,7 @@ public class MuleUtil {
       Properties properties = reader.getPropertiesFromFile(loader.getResource("config.properties")
             .toString());
 
-      String mulePath = properties.getProperty("mule_path");
+      mulePath = properties.getProperty("mule_path");
 
       if (currentOS.toLowerCase().contains("linux") || currentOS.toLowerCase().contains("mac")) {
          startCMD = new String[] { "/bin/bash", "-c", mulePath + "/bin/mule" };
@@ -42,6 +46,17 @@ public class MuleUtil {
          startCMD = new String[] { "cmd /c " + mulePath + "/bin/launcher.bat" };
          stopCMD = new String[] { "cmd /c " + mulePath + "/bin/launcher.bat" };
          restartCMD = new String[] { "cmd /c " + mulePath + "/bin/launcher.bat" };
+      }
+   }
+   
+   public boolean deployProjectFile(String fromFile) {
+      try {
+         // TODO
+         FileUtils.copyDirectory(new File(fromFile), new File(mulePath + "/apps/"));
+         return true;
+      } catch (Exception e) {
+         e.printStackTrace();
+         return false;
       }
    }
 

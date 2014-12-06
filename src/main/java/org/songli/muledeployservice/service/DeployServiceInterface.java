@@ -4,7 +4,7 @@ import java.rmi.Remote;
 
 public interface DeployServiceInterface extends Remote {
    
-   public boolean deploy();
+   public void deploy(String packageName);
    
    public boolean startMule();
    
